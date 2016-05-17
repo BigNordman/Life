@@ -7,18 +7,21 @@ import android.util.Log;
  * Created by s_vershinin on 17.05.2016.
  */
 public class GameEngine {
-    public static final int CELL_SIZE = 36;
-    public static final int WIDTH = 648 / CELL_SIZE;
-    public static final int HEIGHT = 720 / CELL_SIZE;
+    public static int CELL_SIZE;
+    public static int WIDTH;
+    public static int HEIGHT;
     public static final int ALIVE = 1;
     public static final int DEAD = 0;
 
     private Context context;
-    private static final int[][] gameGrid = new int[HEIGHT][WIDTH];
+    private static int[][] gameGrid;
 
     public GameEngine(Context context) {
         this.context = context;
-        resetGrid();
+    }
+
+    public static void setGridArray() {
+        gameGrid = new int[HEIGHT][WIDTH];
     }
 
     public static int[][] getGrid() {
@@ -43,7 +46,7 @@ public class GameEngine {
         }
     }
 
-    public void generateNextGenerationClassic() {
+    public void generateNextGeneration() {
         int neighbours;
         int[][] nextGenerationGrid = new int[HEIGHT][WIDTH];
 
@@ -55,32 +58,14 @@ public class GameEngine {
                     case ALIVE:
                         if (neighbours < 2 || neighbours > 3)
                             nextGenerationGrid[h][w] = DEAD;
+                        else
+                            nextGenerationGrid[h][w] = ALIVE;
                         break;
                     case DEAD:
                         if (neighbours == 3)
                             nextGenerationGrid[h][w] = ALIVE;
-                        break;
-                }
-            }
-        }
-        copyGrid(nextGenerationGrid, gameGrid);
-    }
-
-    public void generateNextGenerationFunny() {
-        int neighbours;
-        int[][] nextGenerationGrid = new int[HEIGHT][WIDTH];
-
-        for (int h = 0; h < HEIGHT; h++) {
-            for (int w = 0; w < WIDTH; w++) {
-                neighbours = calculateNeighbours(h, w);
-                switch(gameGrid[h][w]){
-
-                    case ALIVE:
-                        nextGenerationGrid[h][w] = DEAD;
-                        break;
-                    case DEAD:
-                        if (neighbours >= 2)
-                            nextGenerationGrid[h][w] = ALIVE;
+                        else
+                            nextGenerationGrid[h][w] = DEAD;
                         break;
                 }
             }
@@ -93,14 +78,13 @@ public class GameEngine {
         int total =  0;
         for (int h = -1; h <= 1; h++) {
             for (int w = -1; w <= 1; w++) {
-                //if (h != 0 || w != 0) { // не считаем соседом саму клетку
+                if (h != 0 || w != 0) { // не считаем соседом саму клетку
                     if (gameGrid[(HEIGHT + (y + h)) % HEIGHT][(WIDTH + (x + w)) % WIDTH] == ALIVE) {
                         total++;
                     }
-                //}
+                }
             }
         }
-        //Log.d("LOG","["+y+"]["+x+"] = " + total);
         return total;
     }
 

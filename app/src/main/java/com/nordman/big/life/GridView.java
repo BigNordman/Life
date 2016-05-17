@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +48,7 @@ public class GridView extends View{
 
         deadCell = new Paint();
         deadCell.setColor(ContextCompat.getColor(context, R.color.cell2));
+
     }
 
     public void setMode(int mode) {
@@ -112,7 +112,7 @@ public class GridView extends View{
     }
 
     private void update() {
-        engine.generateNextGenerationFunny();
+        engine.generateNextGeneration();
         refreshHandler.sleep(loopInterval);
     }
 
@@ -130,7 +130,7 @@ public class GridView extends View{
             @Override
             public void run() {
                 GridView theGrid = mGridView.get();
-                Log.d("LOG","...handle message...");
+                //Log.d("LOG","...handle message...");
                 if (theGrid.currentMode == RUNNING) {
                     theGrid.update();
                     theGrid.invalidate();
@@ -165,7 +165,17 @@ public class GridView extends View{
     }
 
     public void step() {
-        engine.generateNextGenerationFunny();
+        engine.generateNextGeneration();
         this.invalidate();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        GameEngine.CELL_SIZE = 36;
+        GameEngine.WIDTH = MeasureSpec.getSize(widthMeasureSpec)/ GameEngine.CELL_SIZE;
+        GameEngine.HEIGHT = MeasureSpec.getSize(heightMeasureSpec)/ GameEngine.CELL_SIZE;
+        GameEngine.setGridArray();
     }
 }
