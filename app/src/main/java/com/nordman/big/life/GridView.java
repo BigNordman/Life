@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -18,16 +19,18 @@ import java.lang.ref.WeakReference;
 public class GridView extends View{
     public static final int STOPPED = 0;
     public static final int RUNNING = 1;
+    public static final long MIN_LOOP_INTERVAL = 20;
+    public static final long MAX_LOOP_INTERVAL = 500;
 
     private Context context;
     private GameEngine engine;
     private int currentMode = STOPPED;
-    private long loopInterval = 1000/6;
+    private long loopInterval = 500;
     private RefreshHandler refreshHandler = new RefreshHandler(this);
 
-    private Paint background;
     private Paint aliveCell;
     private Paint deadCell;
+
 
 
     public GridView(Context context, AttributeSet attrs) {
@@ -40,9 +43,6 @@ public class GridView extends View{
     private void initGridView() {
         setFocusable(true);
 
-        background = new Paint();
-        background.setColor(ContextCompat.getColor(context, R.color.background));
-
         aliveCell = new Paint();
         aliveCell.setColor(ContextCompat.getColor(context, R.color.cell));
 
@@ -54,23 +54,26 @@ public class GridView extends View{
     public void setMode(int mode) {
         currentMode = mode;
         Button buttonStart = (Button)((MainActivity)context).findViewById(R.id.buttonStart);
+        Button buttonStep = (Button)((MainActivity)context).findViewById(R.id.buttonStep);
+        Button buttonClear = (Button)((MainActivity)context).findViewById(R.id.buttonClear);
 
         if (mode == RUNNING) {
             if (buttonStart != null) buttonStart.setText("Стоп");
+            if (buttonStep != null) buttonStep.setEnabled(false);
+            if (buttonClear != null) buttonClear.setEnabled(false);
             update();
         }
 
         if (mode == STOPPED) {
             if (buttonStart != null) buttonStart.setText("Старт");
+            if (buttonStep != null) buttonStep.setEnabled(true);
+            if (buttonClear != null) buttonClear.setEnabled(true);
         }
 
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // draw background
-        canvas.drawRect(0, 0, getWidth(), getHeight(), background);
-
         // draw cells
         for (int h = 0; h < GameEngine.HEIGHT; h++) {
             for (int w = 0; w < GameEngine.WIDTH; w++) {
@@ -147,6 +150,21 @@ public class GridView extends View{
         }
     }
 
+    public void clearLoop() {
+        refreshHandler.sleepCanceled();
+    }
+
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        GameEngine.CELL_SIZE = 36;
+        GameEngine.WIDTH = MeasureSpec.getSize(widthMeasureSpec)/ GameEngine.CELL_SIZE;
+        GameEngine.HEIGHT = MeasureSpec.getSize(heightMeasureSpec)/ GameEngine.CELL_SIZE;
+        GameEngine.setGridArray();
+    }
+
     public void clear(){
         engine.resetGrid();
         this.invalidate();
@@ -160,22 +178,13 @@ public class GridView extends View{
         }
     }
 
-    public void clearLoop() {
-        refreshHandler.sleepCanceled();
-    }
-
     public void step() {
         engine.generateNextGeneration();
         this.invalidate();
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        GameEngine.CELL_SIZE = 36;
-        GameEngine.WIDTH = MeasureSpec.getSize(widthMeasureSpec)/ GameEngine.CELL_SIZE;
-        GameEngine.HEIGHT = MeasureSpec.getSize(heightMeasureSpec)/ GameEngine.CELL_SIZE;
-        GameEngine.setGridArray();
+    public void setSpeed(int progress) {
+        loopInterval = (100*MAX_LOOP_INTERVAL - 100*(MAX_LOOP_INTERVAL - MIN_LOOP_INTERVAL)/100*progress)/100;
     }
+
 }

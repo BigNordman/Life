@@ -23,27 +23,64 @@
         android:gravity="center_vertical|center_horizontal"
         android:background="@color/color_primary_opacity"
         android:id="@+id/linearLayout">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Старт"
-            android:id="@+id/buttonStart"
-            android:onClick="onButtonStart"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Дальше"
-            android:id="@+id/buttonStep"
-            android:onClick="onButtonStep"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Старт"
+                    android:id="@+id/buttonStart"
+                    android:onClick="onButtonStart"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Очистить"
-            android:id="@+id/buttonClear"
-            android:onClick="onButtonClear"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Дальше"
+                    android:id="@+id/buttonStep"
+                    android:onClick="onButtonStep"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Очистить"
+                    android:id="@+id/buttonClear"
+                    android:onClick="onButtonClear"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Скорость"
+                    android:id="@+id/textView"
+                    android:layout_weight="0.02"
+                    android:textColor="@color/cell2" />
+
+                <SeekBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/speedBar"
+                    android:layout_weight="0.38" />
+
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

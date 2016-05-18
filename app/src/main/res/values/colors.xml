@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="color_primary_opacity">#913B5998</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ffffff</color>
 
     <color name="background">#3F51B5</color>
     <color name="cell">#303F9F</color>
