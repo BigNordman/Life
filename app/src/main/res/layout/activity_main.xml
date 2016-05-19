@@ -17,7 +17,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dip"
+        android:layout_marginBottom="5dip"
         android:padding="2dp"
         android:layout_gravity="center_horizontal|bottom"
         android:gravity="center_vertical|center_horizontal"
@@ -36,24 +36,17 @@
 
                 <Button
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:text="Старт"
                     android:id="@+id/buttonStart"
                     android:onClick="onButtonStart"/>
 
                 <Button
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:text="Дальше"
                     android:id="@+id/buttonStep"
                     android:onClick="onButtonStep"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Очистить"
-                    android:id="@+id/buttonClear"
-                    android:onClick="onButtonClear"/>
 
             </LinearLayout>
 
@@ -77,6 +70,28 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/speedBar"
                     android:layout_weight="0.38" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical|center_horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Случайная"
+                    android:id="@+id/buttonRandom"
+                    android:onClick="onButtonRandom"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Очистить"
+                    android:id="@+id/buttonClear"
+                    android:onClick="onButtonClear"/>
 
             </LinearLayout>
 

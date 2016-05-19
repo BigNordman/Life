@@ -9,7 +9,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 
 import java.lang.ref.WeakReference;
 
@@ -53,23 +52,11 @@ public class GridView extends View{
 
     public void setMode(int mode) {
         currentMode = mode;
-        Button buttonStart = (Button)((MainActivity)context).findViewById(R.id.buttonStart);
-        Button buttonStep = (Button)((MainActivity)context).findViewById(R.id.buttonStep);
-        Button buttonClear = (Button)((MainActivity)context).findViewById(R.id.buttonClear);
+        if (mode == RUNNING) update();
+    }
 
-        if (mode == RUNNING) {
-            if (buttonStart != null) buttonStart.setText("Стоп");
-            if (buttonStep != null) buttonStep.setEnabled(false);
-            if (buttonClear != null) buttonClear.setEnabled(false);
-            update();
-        }
-
-        if (mode == STOPPED) {
-            if (buttonStart != null) buttonStart.setText("Старт");
-            if (buttonStep != null) buttonStep.setEnabled(true);
-            if (buttonClear != null) buttonClear.setEnabled(true);
-        }
-
+    public int getMode(){
+        return currentMode;
     }
 
     @Override
@@ -186,5 +173,11 @@ public class GridView extends View{
     public void setSpeed(int progress) {
         loopInterval = (100*MAX_LOOP_INTERVAL - 100*(MAX_LOOP_INTERVAL - MIN_LOOP_INTERVAL)/100*progress)/100;
     }
+
+    public void fillRandom() {
+        engine.randomGrid();
+        this.invalidate();
+    }
+
 
 }

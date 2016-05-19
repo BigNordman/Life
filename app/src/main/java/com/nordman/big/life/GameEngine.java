@@ -3,6 +3,8 @@ package com.nordman.big.life;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.Random;
+
 /**
  * Created by s_vershinin on 17.05.2016.
  */
@@ -92,6 +94,25 @@ public class GameEngine {
         for (int h = 0; h < HEIGHT; h++) {
             for (int w = 0; w < WIDTH; w++) {
                 destination[h][w] = source[h][w];
+            }
+        }
+    }
+
+    public void randomGrid() {
+        // битовые операции
+        long zeroBits;
+
+        for (int h = 0; h < HEIGHT; h++) {
+            zeroBits = (long) Math.pow(2, WIDTH);
+
+            Random r = new Random();
+            r.nextDouble();
+            long randomLong = (long)(r.nextDouble()*((long) Math.pow(2, WIDTH+1)));
+
+            for (int w = 0; w < WIDTH; w++) {
+                if ((randomLong & zeroBits)==0) gameGrid[h][w] = DEAD;
+                else gameGrid[h][w] = ALIVE;
+                zeroBits = zeroBits >> 1;
             }
         }
     }
