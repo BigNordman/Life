@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,6 +21,7 @@ public class GridView extends View{
     public static final int RUNNING = 1;
     public static final long MIN_LOOP_INTERVAL = 20;
     public static final long MAX_LOOP_INTERVAL = 500;
+    public static final int DEFAULT_CELL_SIZE = 36;
 
     private Context context;
     private GameEngine engine;
@@ -61,9 +63,12 @@ public class GridView extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
+        //Log.d("LOG","...onDraw");
+
         // draw cells
         for (int h = 0; h < GameEngine.HEIGHT; h++) {
             for (int w = 0; w < GameEngine.WIDTH; w++) {
+
                 if (GameEngine.getGrid()[h][w] == GameEngine.ALIVE) {
                     canvas.drawRect(
                             w * GameEngine.CELL_SIZE,
@@ -146,10 +151,12 @@ public class GridView extends View{
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        GameEngine.CELL_SIZE = 36;
-        GameEngine.WIDTH = MeasureSpec.getSize(widthMeasureSpec)/ GameEngine.CELL_SIZE;
-        GameEngine.HEIGHT = MeasureSpec.getSize(heightMeasureSpec)/ GameEngine.CELL_SIZE;
-        GameEngine.setGridArray();
+        if (GameEngine.CELL_SIZE == 0) {
+            GameEngine.CELL_SIZE = DEFAULT_CELL_SIZE;
+            GameEngine.WIDTH = MeasureSpec.getSize(widthMeasureSpec)/ GameEngine.CELL_SIZE;
+            GameEngine.HEIGHT = MeasureSpec.getSize(heightMeasureSpec)/ GameEngine.CELL_SIZE;
+            GameEngine.setGridArray();
+        }
     }
 
     public void clear(){
@@ -179,5 +186,9 @@ public class GridView extends View{
         this.invalidate();
     }
 
+    public void saveGrid(String name) {
+        engine.saveGrid(name);
+        Log.d("LOG","... save grid " + name + "...");
+    }
 
 }

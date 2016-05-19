@@ -48,6 +48,13 @@
                     android:id="@+id/buttonStep"
                     android:onClick="onButtonStep"/>
 
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Сохранить"
+                    android:id="@+id/buttonSave"
+                    android:onClick="onButtonSave"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -78,6 +85,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center_vertical|center_horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Загрузить"
+                    android:id="@+id/buttonLoad"
+                    android:onClick="onButtonLoad"/>
 
                 <Button
                     android:layout_width="wrap_content"

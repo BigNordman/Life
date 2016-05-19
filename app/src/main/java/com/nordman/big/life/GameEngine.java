@@ -1,6 +1,9 @@
 package com.nordman.big.life;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.Random;
@@ -9,7 +12,7 @@ import java.util.Random;
  * Created by s_vershinin on 17.05.2016.
  */
 public class GameEngine {
-    public static int CELL_SIZE;
+    public static int CELL_SIZE = 0;
     public static int WIDTH;
     public static int HEIGHT;
     public static final int ALIVE = 1;
@@ -17,9 +20,11 @@ public class GameEngine {
 
     private Context context;
     private static int[][] gameGrid;
+    DBHelper dbHelper;
 
     public GameEngine(Context context) {
         this.context = context;
+        dbHelper = new DBHelper(context);
     }
 
     public static void setGridArray() {
@@ -39,6 +44,7 @@ public class GameEngine {
     }
 
     public void changeState(float x, float y){
+
         int h = (int)(y / CELL_SIZE );
         int w = (int)(x / CELL_SIZE );
 
@@ -117,4 +123,53 @@ public class GameEngine {
         }
     }
 
+    public void saveGrid(String name) {
+        ContentValues cvCombination = new ContentValues();
+        ContentValues cvMatrix = new ContentValues();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String rowString;
+
+        cvCombination.put("name", name);
+        long combinationID = db.insert("combination", null, cvCombination);
+        //Log.d("LOG", "...combination inserted, ID = " + combinationID);
+
+        for (int h = 0; h < HEIGHT; h++) {
+            rowString = "";
+            for (int w = 0; w < WIDTH; w++) {
+                rowString += String.valueOf(gameGrid[h][w]) ;
+            }
+            cvMatrix.put("combination",combinationID);
+            cvMatrix.put("rownumber",h);
+            cvMatrix.put("rowstring",rowString);
+            long rowID = db.insert("matrix", null, cvMatrix);
+            //Log.d("LOG", "...matrix row inserted, ID = " + rowID + " value = " + rowString);
+        }
+    }
+
+    class DBHelper extends SQLiteOpenHelper {
+
+        public DBHelper(Context context) {
+            super(context, "myDB", null, 1);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            Log.d("LOG", "...onCreate database...");
+            // создаем таблицы
+            db.execSQL("create table combination ("
+                    + "id integer primary key autoincrement,"
+                    + "name text" + ");");
+
+            db.execSQL("create table matrix ("
+                    + "id integer primary key autoincrement,"
+                    + "combination integer,"
+                    + "rownumber integer,"
+                    + "rowstring text" + ");");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        }
+    }
 }
