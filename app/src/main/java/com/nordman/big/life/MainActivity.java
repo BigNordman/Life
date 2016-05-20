@@ -1,6 +1,7 @@
 package com.nordman.big.life;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
     private GridView gridView;
@@ -88,6 +92,20 @@ public class MainActivity extends AppCompatActivity {
         gridView.setMode(GridView.STOPPED);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode==1) {
+            if (data != null) {
+                Log.d("LOG","...selected id = " + data.getIntExtra("id",0));
+                Log.d("LOG","...selected name = " + data.getStringExtra("name"));
+                gridView.loadGrid(data.getIntExtra("id",0));
+            }
+
+        }
+    }
+
     public void onButtonClear(View view) {
         gridView.clear();
     }
@@ -99,17 +117,23 @@ public class MainActivity extends AppCompatActivity {
         Button buttonStep = (Button)findViewById(R.id.buttonStep);
         Button buttonClear = (Button)findViewById(R.id.buttonClear);
         Button buttonRandom = (Button)findViewById(R.id.buttonRandom);
+        Button buttonSave = (Button)findViewById(R.id.buttonSave);
+        Button buttonLoad = (Button)findViewById(R.id.buttonLoad);
 
         if (gridView.getMode()==GridView.RUNNING) {
             if (buttonStart != null) buttonStart.setText("Стоп");
             if (buttonStep != null) buttonStep.setEnabled(false);
             if (buttonClear != null) buttonClear.setEnabled(false);
             if (buttonRandom != null) buttonRandom.setEnabled(false);
+            if (buttonSave != null) buttonSave.setEnabled(false);
+            if (buttonLoad != null) buttonLoad.setEnabled(false);
         } else {
             if (buttonStart != null) buttonStart.setText("Старт");
             if (buttonStep != null) buttonStep.setEnabled(true);
             if (buttonClear != null) buttonClear.setEnabled(true);
             if (buttonRandom != null) buttonRandom.setEnabled(true);
+            if (buttonSave != null) buttonSave.setEnabled(true);
+            if (buttonLoad != null) buttonLoad.setEnabled(true);
         }
     }
 
@@ -146,8 +170,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onButtonLoad(View view) {
-        // TODO: сделать загрузку сохраненной матрицы
-        //gridView.loadGrid();
+        Intent intent = new Intent(this, SelectGridActivity.class);
+        this.startActivityForResult(intent, 1);
     }
 
 }

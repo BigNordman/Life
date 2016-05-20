@@ -2,10 +2,12 @@ package com.nordman.big.life;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -20,7 +22,7 @@ public class GameEngine {
 
     private Context context;
     private static int[][] gameGrid;
-    DBHelper dbHelper;
+    private static DBHelper dbHelper;
 
     public GameEngine(Context context) {
         this.context = context;
@@ -145,6 +147,48 @@ public class GameEngine {
             //Log.d("LOG", "...matrix row inserted, ID = " + rowID + " value = " + rowString);
         }
     }
+
+    public void loadGrid(int id) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = "combination = ?";
+        String[] selectionArgs = new String[] { String.valueOf(id) };
+        Cursor c = db.query("matrix", null, selection, selectionArgs, null, null, null);
+
+        resetGrid();
+        if (c.moveToFirst()) {
+            int rowNumberColIndex = c.getColumnIndex("rownumber");
+            int rowStringColIndex = c.getColumnIndex("rowstring");
+
+            do {
+                //Log.d("LOG","row[" + c.getInt(rowNumberColIndex) + "] = " + c.getString(rowStringColIndex));
+                String row = c.getString(rowStringColIndex);
+                for (int i = 0; i < row.length(); i++){
+                    gameGrid[c.getInt(rowNumberColIndex)][i] = Integer.parseInt(row.substring(i,i+1));
+                }
+            } while (c.moveToNext());
+        }
+        c.close();
+    }
+
+    public static ArrayList<GridHeader> getSavedGridList () {
+        ArrayList<GridHeader> result = new ArrayList<GridHeader>();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        Cursor c = db.query("combination", null, null, null, null, null, null);
+        if (c.moveToFirst()) {
+            int idColIndex = c.getColumnIndex("id");
+            int nameColIndex = c.getColumnIndex("name");
+
+            do {
+                GridHeader item = new GridHeader(c.getInt(idColIndex),c.getString(nameColIndex));
+                result.add(item);
+            } while (c.moveToNext());
+        }
+        c.close();
+
+        return result;
+    }
+
 
     class DBHelper extends SQLiteOpenHelper {
 

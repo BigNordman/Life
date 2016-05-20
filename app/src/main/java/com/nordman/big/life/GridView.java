@@ -188,7 +188,11 @@ public class GridView extends View{
 
     public void saveGrid(String name) {
         engine.saveGrid(name);
-        Log.d("LOG","... save grid " + name + "...");
+    }
+
+    public void loadGrid(int id) {
+        engine.loadGrid(id);
+        this.invalidate();
     }
 
 }
